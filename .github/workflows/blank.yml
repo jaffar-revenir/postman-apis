@@ -42,7 +42,7 @@ jobs:
       # Run Collection
       - name: Run Collection
         run: |
-          newman run /Test-Postman.postman_collection.json -r htmlextra –reporter-htmlextra-title “Automated test Sep10 2024 – Postman echo”
+          newman run Test-Postman.postman_collection.json -r htmlextra –reporter-htmlextra-title “Automated test Sep10 2024 – Postman echo”
           -r htmlextra --reporter-htmlextra-export SampleArtifact/report.html
 
       # Publish the report
