@@ -45,8 +45,8 @@ jobs:
           newman run Test-Postman.postman_collection.json
 
       # Publish the report
-      - name: Publish Report
-        uses: actions/upload-artifact@v4
-        with:
-          name: Reports
-          path: SampleArtifact
+      # - name: Publish Report
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: Reports
+      #     path: SampleArtifact
