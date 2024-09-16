@@ -36,7 +36,7 @@ jobs:
       # Install newman and reporter
       - name: Install newman
         run: |
-          npm install -g newman
+          npm install -g newman newman-reporter-htmlextra
           
       # Run Collection
       - name: Run Collection
