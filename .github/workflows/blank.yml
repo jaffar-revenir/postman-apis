@@ -42,8 +42,8 @@ jobs:
       # Run Collection
       - name: Run Collection
         run: |
-          newman run Test-Postman.postman_collection.json -r cli,json htmlextra --reporter-htmlextra-export Report/report.html -k
-
+         newman run Test-Postman.postman_collection.json --verbose
+         
       #Publish the report
       - name: Publish Report
         uses: actions/upload-artifact@v4
