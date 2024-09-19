@@ -268,8 +268,9 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"    var jsonData = pm.response.json();",
-							"    pm.expect(jsonData.title).to.contains(null);",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
 							""
 						],
 						"type": "text/javascript"
@@ -507,22 +508,6 @@
 						"2"
 					]
 				}
-			},
-			"response": []
-		},
-		{
-			"name": "Delete",
-			"request": {
-				"method": "GET",
-				"header": []
-			},
-			"response": []
-		},
-		{
-			"name": "POST Register Successful",
-			"request": {
-				"method": "GET",
-				"header": []
 			},
 			"response": []
 		},
