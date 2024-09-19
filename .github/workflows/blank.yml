@@ -33,10 +33,10 @@ jobs:
         with:
           node-version: '16.x'
       
-      # Install newman and reporter
+      # Install newman
       - name: Install newman
         run: |
-          npm install -g newman newman-reporter-htmlextra
+          npm install -g newman
           
       # Run Collection
       - name: Run Collection
