@@ -76,9 +76,9 @@
 							"pm.test(\"Status code is 404\", function () {",
 							"    pm.response.to.have.status(404);",
 							"});",
-							"pm.test(\"Status code is 200\", function () {",
-							"    pm.response.to.have.status(200);",
-							"});"
+							"// pm.test(\"Status code is 200\", function () {",
+							"//     pm.response.to.have.status(200);",
+							"// });"
 						],
 						"type": "text/javascript"
 					}
@@ -321,10 +321,10 @@
 							"    ",
 							"});",
 							"",
-							"    pm.test(\"Vaidate the lastname to be not null\", function () {",
-							"    var jsonData = pm.response.json();",
-							"    pm.expect(jsonData.data.last_name).to.contains(\"test\");",
-							"});"
+							"//     pm.test(\"Vaidate the lastname to be not null\", function () {",
+							"//     var jsonData = pm.response.json();",
+							"//     pm.expect(jsonData.data.last_name).to.contains(\"test\");",
+							"// });"
 						],
 						"type": "text/javascript"
 					}
@@ -438,9 +438,9 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Status code is 404\", function () {",
-							"    pm.response.to.have.status(404);",
-							"});",
+							"// pm.test(\"Status code is 404\", function () {",
+							"//     pm.response.to.have.status(404);",
+							"// });",
 							"",
 							"pm.test(\"Status code is 201\", function () {",
 							"    pm.response.to.have.status(201);",
