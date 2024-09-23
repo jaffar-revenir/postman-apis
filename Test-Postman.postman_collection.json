@@ -4,7 +4,7 @@
 		"name": "Test-Postman",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "38326411",
-		"_collection_link": "https://orange-astronaut-393735.postman.co/workspace/New-Team-Workspace~a8eeafa0-371d-425e-bcac-3829828e2031/collection/4733555-8f4564b0-69a6-4191-9133-ec09b9ab2570?action=share&source=collection_link&creator=38326411"
+		"_collection_link": "https://orange-astronaut-393735.postman.co/workspace/a8eeafa0-371d-425e-bcac-3829828e2031/collection/4733555-8f4564b0-69a6-4191-9133-ec09b9ab2570?action=share&source=collection_link&creator=38326411"
 	},
 	"item": [
 		{
@@ -76,7 +76,9 @@
 							"pm.test(\"Status code is 404\", function () {",
 							"    pm.response.to.have.status(404);",
 							"});",
-							""
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
 						],
 						"type": "text/javascript"
 					}
