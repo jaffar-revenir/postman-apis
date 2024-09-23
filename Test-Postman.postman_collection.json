@@ -15,7 +15,7 @@
 					"script": {
 						"exec": [
 							"pm.test(\"Status code is 200\", function () {",
-							"    pm.response.to.have.status(400);",
+							"    pm.response.to.have.status(200);",
 							"});",
 							"pm.test(\"Vaidate the email to be not null\", function () {",
 							"    var jsonData = pm.response.json();",
@@ -612,8 +612,8 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Status code is 200\", function () {",
-							"    pm.response.to.have.status(200);",
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
 							"});",
 							""
 						],
