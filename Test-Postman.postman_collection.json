@@ -1,288 +1,134 @@
 {
 	"info": {
-		"_postman_id": "8f4564b0-69a6-4191-9133-ec09b9ab2570",
-		"name": "Test-Postman",
+		"_postman_id": "4873f188-5a6f-4516-a444-e0325595f481",
+		"name": "Revenir postman happy cases",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "38326411",
-		"_collection_link": "https://orange-astronaut-393735.postman.co/workspace/a8eeafa0-371d-425e-bcac-3829828e2031/collection/4733555-8f4564b0-69a6-4191-9133-ec09b9ab2570?action=share&source=collection_link&creator=38326411"
+		"_collection_link": "https://orange-astronaut-393735.postman.co/workspace/New-Team-Workspace~a8eeafa0-371d-425e-bcac-3829828e2031/collection/38326411-4873f188-5a6f-4516-a444-e0325595f481?action=share&source=collection_link&creator=38326411"
 	},
 	"item": [
 		{
-			"name": "Users",
+			"name": "Subject Copy",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Status code is 200\", function () {",
-							"    pm.response.to.have.status(200);",
-							"});",
-							"pm.test(\"Vaidate the email to be not null\", function () {",
-							"    var jsonData = pm.response.json();",
-							"    for (var i = 0; i < 6; i++){",
-							"    pm.expect(jsonData.data[i].email).to.not.contains(null);",
+							"pm.test(\"request body validations for first name and last name\", () => {",
+							"    if (pm.request.body.mode === 'raw' && pm.request.body.raw) {",
+							"        try {",
+							"            var jsonData = JSON.parse(pm.request.body.raw);",
+							"            console.log(jsonData);",
+							"            pm.expect(jsonData.first_name).to.not.be.null;",
+							"            pm.expect(jsonData.last_name).to.not.be.null;",
+							"        } catch (e) {",
+							"            console.error(\"Failed to parse JSON: \", e);",
+							"        }",
+							"    } else {",
+							"        console.log(\"Request body is not in raw JSON format.\");",
 							"    }",
 							"});",
 							"",
-							"    pm.test(\"Vaidate the lastname to be not null\", function () {",
-							"    var jsonData = pm.response.json();",
-							"    for (var i = 0; i < 6; i++){",
-							"    pm.expect(jsonData.data[i].last_name).to.not.contains(null);",
+							"pm.test(\"request body validations for passport\", () => {",
+							"    if (pm.request.body.mode === 'raw' && pm.request.body.raw) {",
+							"        try {",
+							"            var jsonData = JSON.parse(pm.request.body.raw);",
+							"            console.log(jsonData);",
+							"            pm.expect(jsonData.passport.number).to.not.be.null;",
+							"            pm.expect(jsonData.passport.country).to.not.be.null;",
+							"            pm.expect(jsonData.passport.expiry).to.not.be.null;",
+							"        } catch (e) {",
+							"            console.error(\"Failed to parse JSON: \", e);",
+							"        }",
+							"    } else {",
+							"        console.log(\"Request body is not in raw JSON format.\");",
 							"    }",
+							"});",
+							"",
+							"pm.test(\"request body validations for address\", () => {",
+							"    if (pm.request.body.mode === 'raw' && pm.request.body.raw) {",
+							"        try {",
+							"            var jsonData = JSON.parse(pm.request.body.raw);",
+							"            console.log(jsonData);",
+							"            pm.expect(jsonData.address.line_1).to.not.be.null;",
+							"            pm.expect(jsonData.address.line_2).to.not.be.null;",
+							"            pm.expect(jsonData.address.line_3).to.not.be.null;",
+							"            pm.expect(jsonData.address.city).to.not.be.null;",
+							"            pm.expect(jsonData.address.postcode).to.not.be.null;",
+							"            pm.expect(jsonData.address.country).to.not.be.null;",
+							"        } catch (e) {",
+							"            console.error(\"Failed to parse JSON: \", e);",
+							"        }",
+							"    } else {",
+							"        console.log(\"Request body is not in raw JSON format.\");",
+							"    }",
+							"});",
+							"",
+							"pm.test(\"Response body includes status and message properties\", () => {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.have.property('status');",
+							"    pm.expect(jsonData).to.have.property('message');",
+							"});",
+							"",
+							"pm.test(\"Response status code is 201\", function () {",
+							"    pm.expect(pm.response.code).to.equal(201);",
+							"});",
+							"",
+							"pm.test(\"Response body includes status and message properties\", function () {",
+							"  const responseData = pm.response.json();",
+							"  ",
+							"  pm.expect(responseData).to.be.an('object');",
+							"  pm.expect(responseData).to.include.all.keys('status', 'message');",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response body has the correct schema\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData).to.be.an('object');",
+							"    pm.expect(responseData).to.have.property('status').that.is.a('string');",
+							"    pm.expect(responseData).to.have.property('message').that.is.a('string');",
+							"});",
+							"",
+							"pm.test(\"Ensure the response includes required fields - status and message\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData).to.be.an('object');",
+							"    pm.expect(responseData).to.have.property('status');",
+							"    pm.expect(responseData).to.have.property('message');",
+							"});",
+							"",
+							"// Test to check for specific response header fields",
+							"pm.test(\"Response headers contain specific fields\", function () {",
+							"    pm.response.to.have.header(\"Content-Type\");",
+							"    pm.response.to.have.header(\"Date\");",
+							"    pm.response.to.have.header(\"Content-Length\");",
 							"});"
 						],
-						"type": "text/javascript"
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
 					}
 				}
 			],
 			"request": {
 				"auth": {
-					"type": "noauth"
+					"type": "ntlm"
 				},
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "https://reqres.in/api/users/",
-					"protocol": "https",
-					"host": [
-						"reqres",
-						"in"
-					],
-					"path": [
-						"api",
-						"users",
-						""
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "getProjects",
-			"event": [
-				{
-					"listen": "prerequest",
-					"script": {
-						"exec": [
-							"console.log(pm.globals.get(\"test_url\"));"
-						],
-						"type": "text/javascript"
-					}
-				},
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Status code is 404\", function () {",
-							"    pm.response.to.have.status(404);",
-							"});",
-							"// pm.test(\"Status code is 200\", function () {",
-							"//     pm.response.to.have.status(200);",
-							"// });"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "https://rcvacademymylive.atlassian.net/rest/api/3/project/search",
-					"protocol": "https",
-					"host": [
-						"rcvacademymylive",
-						"atlassian",
-						"net"
-					],
-					"path": [
-						"rest",
-						"api",
-						"3",
-						"project",
-						"search"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Speakers - Get Speakers",
-			"request": {
 				"method": "POST",
-				"header": [
-					{
-						"key": "Device",
-						"value": "Desktop"
-					},
-					{
-						"key": "Application",
-						"value": "Backend"
-					}
-				],
-				"body": {
-					"mode": "formdata",
-					"formdata": [
-						{
-							"key": "token",
-							"value": "915e175a937e745b9e32dba270963434dee2fcbc",
-							"type": "text",
-							"disabled": true
-						},
-						{
-							"key": "password",
-							"value": "electric",
-							"type": "text",
-							"disabled": true
-						}
-					]
-				},
-				"url": {
-					"raw": "http://api.myconnector.ro/agenda/public/get-speakers?token=e5241069fc3fc0a22ae434c68003197d7114a0d0&id_event=2&filters[id_track]=4",
-					"protocol": "http",
-					"host": [
-						"api",
-						"myconnector",
-						"ro"
-					],
-					"path": [
-						"agenda",
-						"public",
-						"get-speakers"
-					],
-					"query": [
-						{
-							"key": "token",
-							"value": "e5241069fc3fc0a22ae434c68003197d7114a0d0"
-						},
-						{
-							"key": "id_event",
-							"value": "2"
-						},
-						{
-							"key": "filters[id_track]",
-							"value": "4"
-						},
-						{
-							"key": "filters[id_session]",
-							"value": "13",
-							"disabled": true
-						},
-						{
-							"key": "filters[id_speaker]",
-							"value": "14",
-							"disabled": true
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Agenda - Get Agenda",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Status code is 200\", function () {",
-							"    pm.response.to.have.status(200);",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "PUT",
-				"header": [
-					{
-						"key": "Device",
-						"value": "Desktop"
-					},
-					{
-						"key": "Application",
-						"value": "Backend"
-					}
-				],
-				"body": {
-					"mode": "formdata",
-					"formdata": [
-						{
-							"key": "token",
-							"value": "915e175a937e745b9e32dba270963434dee2fcbc",
-							"type": "text",
-							"disabled": true
-						},
-						{
-							"key": "password",
-							"value": "electric",
-							"type": "text",
-							"disabled": true
-						}
-					]
-				},
-				"url": {
-					"raw": "http://api.myconnector.ro/agenda/public/get-agenda?token=e5241069fc3fc0a22ae434c68003197d7114a0d0&id_event=3&filters[id_track]=3&filters[id_session]=13&filters[id_speaker]=14",
-					"protocol": "http",
-					"host": [
-						"api",
-						"myconnector",
-						"ro"
-					],
-					"path": [
-						"agenda",
-						"public",
-						"get-agenda"
-					],
-					"query": [
-						{
-							"key": "token",
-							"value": "e5241069fc3fc0a22ae434c68003197d7114a0d0"
-						},
-						{
-							"key": "id_event",
-							"value": "3"
-						},
-						{
-							"key": "filters[id_track]",
-							"value": "3"
-						},
-						{
-							"key": "filters[id_session]",
-							"value": "13"
-						},
-						{
-							"key": "filters[id_speaker]",
-							"value": "14"
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "New Request",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Status code is 200\", function () {",
-							"    pm.response.to.have.status(200);",
-							"});",
-							""
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "PATCH",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"completed\":true\n}",
+					"raw": "{\n  \"first_name\": \"Test Dec9\",\n  \"last_name\": \"Applicant new new\",\n  \"passport\": {\n    \"number\": \"980-8098-56757\",\n    \"country\": \"Pakistan\",\n    \"expiry\": \"19-01-2026\"\n  },\n  \"address\": {\n    \"line_1\": \"Testing address 1\",\n    \"line_2\": \"Testing address 2\",\n    \"line_3\": \"Testing address 3\",\n    \"city\": \"Lahore\",\n    \"region\": \"Punjab\",\n    \"postcode\": \"54000\",\n    \"country\": \"Pakistan\"\n  },\n  \"dob\": \"19-05-1977\"\n}\n",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -290,356 +136,16 @@
 					}
 				},
 				"url": {
-					"raw": "https://jsonplaceholder.typicode.com/todos/1",
+					"raw": "https://t1.prometheus-forge.revenir.tax/subjects",
 					"protocol": "https",
 					"host": [
-						"jsonplaceholder",
-						"typicode",
-						"com"
+						"t1",
+						"prometheus-forge",
+						"revenir",
+						"tax"
 					],
 					"path": [
-						"todos",
-						"1"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Single User",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Status code is 200\", function () {",
-							"    pm.response.to.have.status(200);",
-							"});",
-							"pm.test(\"Vaidate the email to be not null\", function () {",
-							"    var jsonData = pm.response.json();",
-							"    pm.expect(jsonData.data.email).to.not.contains(null);",
-							"    ",
-							"});",
-							"",
-							"//     pm.test(\"Vaidate the lastname to be not null\", function () {",
-							"//     var jsonData = pm.response.json();",
-							"//     pm.expect(jsonData.data.last_name).to.contains(\"test\");",
-							"// });"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "https://reqres.in/api/users/2",
-					"protocol": "https",
-					"host": [
-						"reqres",
-						"in"
-					],
-					"path": [
-						"api",
-						"users",
-						"2"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "List<Resource>",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Status code is 200\", function () {",
-							"    pm.response.to.have.status(200);",
-							"});",
-							"pm.test(\"Vaidate the name and year to be not null\", function () {",
-							"    var jsonData = pm.response.json();",
-							"        for (var i = 0; i < 6; i++){",
-							"    pm.expect(jsonData.data[i].name).to.exist",
-							"    pm.expect(jsonData.data[i].year).to.exist",
-							"    }",
-							"});",
-							"",
-							"    pm.test(\"Vaidate the color to be not null\", function () {",
-							"    var jsonData = pm.response.json();",
-							"",
-							"    for (var i = 0; i < 6; i++){",
-							"    pm.expect(jsonData.data[i].color).to.not.contains(null);",
-							"    }",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "https://reqres.in/api/unknown",
-					"protocol": "https",
-					"host": [
-						"reqres",
-						"in"
-					],
-					"path": [
-						"api",
-						"unknown"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "single resource NOT FOUND",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Status code is 404\", function () {",
-							"    pm.response.to.have.status(404);",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "https://reqres.in/api/unknown/23",
-					"protocol": "https",
-					"host": [
-						"reqres",
-						"in"
-					],
-					"path": [
-						"api",
-						"unknown",
-						"23"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Create",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"// pm.test(\"Status code is 404\", function () {",
-							"//     pm.response.to.have.status(404);",
-							"// });",
-							"",
-							"pm.test(\"Status code is 201\", function () {",
-							"    pm.response.to.have.status(201);",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [],
-				"url": {
-					"raw": "https://reqres.in/api/users",
-					"protocol": "https",
-					"host": [
-						"reqres",
-						"in"
-					],
-					"path": [
-						"api",
-						"users"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "New Request",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"// pm.test(\"Status code is 404\", function () {",
-							"//     pm.response.to.have.status(404);",
-							"// });",
-							"",
-							"pm.test(\"Status code is 200\", function () {",
-							"    pm.response.to.have.status(200);",
-							"});",
-							"",
-							"pm.test(\"Status code is 200\", function () {",
-							"    var jsonData = pm.response.json();",
-							"    pm.expect(jsonData.updatedAT).to.be.not.null",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "PUT",
-				"header": [],
-				"url": {
-					"raw": "https://reqres.in/api/users/2",
-					"protocol": "https",
-					"host": [
-						"reqres",
-						"in"
-					],
-					"path": [
-						"api",
-						"users",
-						"2"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "POST Register Unsuccessful",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Status code is 400\", function () {",
-							"    pm.response.to.have.status(400);",
-							"});",
-							"",
-							"pm.test(\"Verify if user registration was successful\", function (){",
-							"    var jsonData = pm.response.json();",
-							"    pm.expect(jsonData.error).to.contains(\"Missing password\");",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"email\": \"Test@reqres.in\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "https://reqres.in/api/register",
-					"protocol": "https",
-					"host": [
-						"reqres",
-						"in"
-					],
-					"path": [
-						"api",
-						"register"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "New Request",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Status code is 200\", function () {",
-							"    pm.response.to.have.status(200);",
-							"});",
-							"",
-							"pm.test(\"Verify if new request token exists and is not null\", function (){",
-							"    var jsonData = pm.response.json();",
-							"    pm.expect(jsonData.token).to.not.contains.null",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"email\": \"eve.holt@reqres.in\",\n    \"password\": \"cityslicka\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "https://reqres.in/api/login",
-					"protocol": "https",
-					"host": [
-						"reqres",
-						"in"
-					],
-					"path": [
-						"api",
-						"login"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Delayed Response",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Status code is 200\", function () {",
-							"    pm.response.to.have.status(200);",
-							"});",
-							""
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "https://reqres.in/api/users?delay=2",
-					"protocol": "https",
-					"host": [
-						"reqres",
-						"in"
-					],
-					"path": [
-						"api",
-						"users"
-					],
-					"query": [
-						{
-							"key": "delay",
-							"value": "2"
-						}
+						"subjects"
 					]
 				}
 			},
