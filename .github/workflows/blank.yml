@@ -10,6 +10,8 @@ jobs:
       - name: Install Postman CLI
         run: |
           curl -o- "https://dl-cli.pstmn.io/install/linux64.sh" | sh
+      - name: Set up Newman CLI
+        run: npm install -g newman
       - name: Decode the .key file from GitHub Secrets
         run: echo "${{ secrets.CERTIFICATE_KEY }}" | base64 --decode > private.key
       - name: Decode the .cert file from GitHub Secrets
