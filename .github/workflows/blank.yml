@@ -10,10 +10,14 @@ jobs:
       - name: Install Postman CLI
         run: |
           curl -o- "https://dl-cli.pstmn.io/install/linux64.sh" | sh
+      - name: Decode the .key file from GitHub Secrets
+        run: echo "${{ secrets.CERTIFICATE_KEY }}" | base64 --decode > private.key
+      - name: Decode the .cert file from GitHub Secrets
+        run: echo "${{ secrets.CERTIFICATE_PEM }}" | base64 --decode > cert.pem
       - name: Login to Postman CLI
         run: postman login --with-api-key ${{ secrets.POSTMAN_API_KEY }}
       - name: Run API tests
         run: |
-          postman collection run "4733555-8f4564b0-69a6-4191-9133-ec09b9ab2570"
+          postman collection run "4733555-8f4564b0-69a6-4191-9133-ec09b9ab2570" KEY_PATH=private.key --env-var CERT_PATH=cert.pem 
       - name: Logout
         run: postman logout ${{ secrets.POSTMAN_API_KEY }}
