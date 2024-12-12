@@ -20,6 +20,6 @@ jobs:
         run: postman login --with-api-key ${{ secrets.POSTMAN_API_KEY }}
       - name: Run API tests
         run: |
-          postman collection run "4873f188-5a6f-4516-a444-e0325595f481" KEY_PATH=private.key --env-var CERT_PATH=cert.pem 
+          newman run Test-Postman.postman_collection.json -t 60000 KEY_PATH=private.key --env-var CERT_PATH=cert.pem
       - name: Logout
         run: postman logout ${{ secrets.POSTMAN_API_KEY }}
