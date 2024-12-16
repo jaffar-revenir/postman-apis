@@ -20,6 +20,6 @@ jobs:
         run: postman login --with-api-key ${{ secrets.POSTMAN_API_KEY }}
       - name: Run API tests
         run: |
-          newman run Test-Postman.postman_collection.json --verbose --ssl-client-cert cert.pem --ssl-client-key private.key --timeout-request 60000 
+          newman run Test-Postman.postman_collection.json -r cli,json --ssl-client-cert cert.pem --ssl-client-key private.key --timeout-request 60000 
       - name: Logout
         run: postman logout ${{ secrets.POSTMAN_API_KEY }}
