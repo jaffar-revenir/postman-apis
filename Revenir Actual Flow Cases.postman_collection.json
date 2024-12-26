@@ -1,0 +1,387 @@
+{
+	"info": {
+		"_postman_id": "9d37105c-f588-4e20-9e99-d50ea09e15d9",
+		"name": "Revenir Actual Flow Cases",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "38326411",
+		"_collection_link": "https://orange-astronaut-393735.postman.co/workspace/New-Team-Workspace~a8eeafa0-371d-425e-bcac-3829828e2031/collection/38326411-9d37105c-f588-4e20-9e99-d50ea09e15d9?action=share&source=collection_link&creator=38326411"
+	},
+	"item": [
+		{
+			"name": "Subject",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var subject_idFull = pm.response.headers.get('Location').split('/');",
+							"var subject_id = subject_idFull[2];",
+							"pm.collectionVariables.set(\"subject_id\", subject_id);",
+							"",
+							"pm.test(\"request body validations for first name and last name\", () => {",
+							"    if (pm.request.body.mode === 'raw' && pm.request.body.raw) {",
+							"        try {",
+							"            var jsonData = JSON.parse(pm.request.body.raw);",
+							"            pm.expect(jsonData.first_name).to.not.be.null;",
+							"            pm.expect(jsonData.last_name).to.not.be.null;",
+							"        } catch (e) {",
+							"            console.error(\"Failed to parse JSON: \", e);",
+							"        }",
+							"    } else {",
+							"        console.log(\"Request body is not in raw JSON format.\");",
+							"    }",
+							"});",
+							"",
+							"pm.test(\"request body validations for passport\", () => {",
+							"    if (pm.request.body.mode === 'raw' && pm.request.body.raw) {",
+							"        try {",
+							"            var jsonData = JSON.parse(pm.request.body.raw);",
+							"            pm.expect(jsonData.passport.number).to.not.be.null;",
+							"            pm.expect(jsonData.passport.country).to.not.be.null;",
+							"            pm.expect(jsonData.passport.expiry).to.not.be.null;",
+							"        } catch (e) {",
+							"            console.error(\"Failed to parse JSON: \", e);",
+							"        }",
+							"    } else {",
+							"        console.log(\"Request body is not in raw JSON format.\");",
+							"    }",
+							"});",
+							"",
+							"pm.test(\"request body validations for address\", () => {",
+							"    if (pm.request.body.mode === 'raw' && pm.request.body.raw) {",
+							"        try {",
+							"            var jsonData = JSON.parse(pm.request.body.raw);",
+							"            pm.expect(jsonData.address.line_1).to.not.be.null;",
+							"            pm.expect(jsonData.address.line_2).to.not.be.null;",
+							"            pm.expect(jsonData.address.line_3).to.not.be.null;",
+							"            pm.expect(jsonData.address.city).to.not.be.null;",
+							"            pm.expect(jsonData.address.postcode).to.not.be.null;",
+							"            pm.expect(jsonData.address.country).to.not.be.null;",
+							"        } catch (e) {",
+							"            console.error(\"Failed to parse JSON: \", e);",
+							"        }",
+							"    } else {",
+							"        console.log(\"Request body is not in raw JSON format.\");",
+							"    }",
+							"});",
+							"",
+							"pm.test(\"Response body includes status and message properties\", () => {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.have.property('status');",
+							"    pm.expect(jsonData).to.have.property('message');",
+							"});",
+							"",
+							"pm.test(\"Response status code is 201\", function () {",
+							"    pm.expect(pm.response.code).to.equal(201);",
+							"});",
+							"",
+							"pm.test(\"Response body includes status and message properties\", function () {",
+							"  const responseData = pm.response.json();",
+							"  ",
+							"  pm.expect(responseData).to.be.an('object');",
+							"  pm.expect(responseData).to.include.all.keys('status', 'message');",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response body has the correct schema\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData).to.be.an('object');",
+							"    pm.expect(responseData).to.have.property('status').that.is.a('string');",
+							"    pm.expect(responseData).to.have.property('message').that.is.a('string');",
+							"});",
+							"",
+							"pm.test(\"Ensure the response includes required fields - status and message\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData).to.be.an('object');",
+							"    pm.expect(responseData).to.have.property('status');",
+							"    pm.expect(responseData).to.have.property('message');",
+							"});",
+							"",
+							"// Test to check for specific response header fields",
+							"pm.test(\"Response headers contain specific fields\", function () {",
+							"    pm.response.to.have.header(\"Content-Type\");",
+							"    pm.response.to.have.header(\"Date\");",
+							"    pm.response.to.have.header(\"Content-Length\");",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "ntlm"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"first_name\": \"Test Dec24\",\n  \"last_name\": \"Applicant new new\",\n  \"passport\": {\n    \"number\": \"980-5555-56757\",\n    \"country\": \"Pakistan\",\n    \"expiry\": \"19-01-2026\"\n  },\n  \"address\": {\n    \"line_1\": \"Testing address 1\",\n    \"line_2\": \"Testing address 2\",\n    \"line_3\": \"Testing address 3\",\n    \"city\": \"Lahore\",\n    \"region\": \"Punjab\",\n    \"postcode\": \"54000\",\n    \"country\": \"Pakistan\"\n  },\n  \"dob\": \"19-05-1977\"\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://t1.prometheus-forge.revenir.tax/subjects",
+					"protocol": "https",
+					"host": [
+						"t1",
+						"prometheus-forge",
+						"revenir",
+						"tax"
+					],
+					"path": [
+						"subjects"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Upload Document",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"pm.test(\"Status is success\", function () {",
+							"    pm.expect(pm.response.json().status).to.equal(\"success\");",
+							"});",
+							"pm.test(\"Response message is present\", function () {",
+							"    pm.expect(pm.response.json().message).to.be.ok;",
+							"});",
+							"pm.test(\"Message contains helios-dev-documents\", function () {",
+							"    pm.expect(pm.response.json().message).to.include(\"helios-dev-documents\");",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": "/Users/jaffarlone/Desktop/Receipts - France/woocommerce-pos-french-receipt.png"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://t1.prometheus-forge.revenir.tax/subjects/{{subject_id}}/documents",
+					"protocol": "https",
+					"host": [
+						"t1",
+						"prometheus-forge",
+						"revenir",
+						"tax"
+					],
+					"path": [
+						"subjects",
+						"{{subject_id}}",
+						"documents"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Transaction",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var trans_idFull = pm.response.headers.get('Location').split('/');",
+							"var trans_id = trans_idFull[4];",
+							"pm.collectionVariables.set(\"transaction_id\", trans_id);",
+							"pm.test(\"request body validations for country\", () => {",
+							"    if (pm.request.body.mode === 'raw' && pm.request.body.raw) {",
+							"        try {",
+							"            var jsonData = JSON.parse(pm.request.body.raw);",
+							"            pm.expect(jsonData.country).to.not.be.empty;",
+							"            pm.expect(jsonData.merchant_name).to.not.be.empty;",
+							"            pm.expect(jsonData.transaction_date).to.not.be.empty;",
+							"            pm.expect(jsonData.total_amount).to.not.be.null;",
+							"            pm.expect(jsonData.total_vat_amount).to.not.be.null;",
+							"            pm.expect(jsonData.receipt_status).to.not.be.empty;",
+							"            pm.expect(jsonData.merchant_transaction_id).to.not.be.empty;",
+							"            pm.expect(jsonData.currency).to.not.be.empty;",
+							"        } catch (e) {",
+							"            console.error(\"Failed to parse JSON: \", e);",
+							"        }",
+							"    } else {",
+							"        console.log(\"Request body is not in raw JSON format.\");",
+							"    }",
+							"});",
+							"",
+							"pm.test(\"Response body includes status and message properties\", () => {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.have.property('status');",
+							"    pm.expect(jsonData).to.have.property('message');",
+							"});",
+							"",
+							"pm.test(\"Response status code is 201\", function () {",
+							"    pm.expect(pm.response.code).to.equal(201);",
+							"});",
+							"",
+							"pm.test(\"Response body includes status and message properties\", function () {",
+							"  const responseData = pm.response.json();",
+							"  ",
+							"  pm.expect(responseData).to.be.an('object');",
+							"  pm.expect(responseData).to.include.all.keys('status', 'message');",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response body has the correct schema\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData).to.be.an('object');",
+							"    pm.expect(responseData).to.have.property('status').that.is.a('string');",
+							"    pm.expect(responseData).to.have.property('message').that.is.a('string');",
+							"});",
+							"",
+							"pm.test(\"Ensure the response includes required fields - status and message\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData).to.be.an('object');",
+							"    pm.expect(responseData).to.have.property('status');",
+							"    pm.expect(responseData).to.have.property('message');",
+							"});",
+							"",
+							"// Test to check for specific response header fields",
+							"pm.test(\"Response headers contain specific fields\", function () {",
+							"    pm.response.to.have.header(\"Content-Type\");",
+							"    pm.response.to.have.header(\"Date\");",
+							"    pm.response.to.have.header(\"Content-Length\");",
+							"    pm.response.to.have.header(\"location\");",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"country\": \"UK\",\n    \"merchant_name\": \"SAMSUNG\",\n    \"transaction_date\": \"24/12/2023\",\n    \"total_amount\": 123,\n    \"total_vat_amount\":12,\n    \"receipt_status\": \"accepted\",\n    \"merchant_transaction_id\": \"121\",\n    \"currency\":\"USD\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://t1.prometheus-forge.revenir.tax/subjects/{{subject_id}}/transactions",
+					"protocol": "https",
+					"host": [
+						"t1",
+						"prometheus-forge",
+						"revenir",
+						"tax"
+					],
+					"path": [
+						"subjects",
+						"{{subject_id}}",
+						"transactions"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Upload Receipt",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"pm.test(\"Status is success\", function () {",
+							"    pm.expect(pm.response.json().status).to.equal(\"success\");",
+							"});",
+							"pm.test(\"Response message is present\", function () {",
+							"    pm.expect(pm.response.json().message).to.be.ok;",
+							"});",
+							"pm.test(\"Message contains helios-dev-documents\", function () {",
+							"    pm.expect(pm.response.json().message).to.include(\"helios-dev-documents\");",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": "/Users/jaffarlone/Desktop/Receipts - France/realistic-receipt-template_23-2147938550.jpg"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://t1.prometheus-forge.revenir.tax/transactions/{{transaction_id}}/receipts",
+					"protocol": "https",
+					"host": [
+						"t1",
+						"prometheus-forge",
+						"revenir",
+						"tax"
+					],
+					"path": [
+						"transactions",
+						"{{transaction_id}}",
+						"receipts"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "subject_id",
+			"value": ""
+		},
+		{
+			"key": "transaction_id",
+			"value": ""
+		}
+	]
+}
