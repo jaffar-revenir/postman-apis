@@ -187,7 +187,7 @@
 						{
 							"key": "file",
 							"type": "file",
-							"src": "https://github.com/jaffar-revenir/postman-apis/blob/main/receipt_jpg.jpg"
+							"src": "receipt_jpg.jpg"
 						}
 					]
 				},
