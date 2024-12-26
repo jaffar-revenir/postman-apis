@@ -187,7 +187,7 @@
 						{
 							"key": "file",
 							"type": "file",
-							"src": "/Users/jaffarlone/Desktop/Receipts - France/woocommerce-pos-french-receipt.png"
+							"src": "https://github.com/jaffar-revenir/postman-apis/blob/main/receipt_jpg.jpg"
 						}
 					]
 				},
