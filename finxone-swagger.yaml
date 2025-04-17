@@ -1,0 +1,1383 @@
+openapi: 3.0.3
+info:
+  title: Revenir
+  contact:
+    email: himanshu@userevenir.com
+  version: 0.0.1
+paths:
+  /subjects:
+    post:
+      parameters:
+        - in: header
+          name: tenant
+          description: pass tenant id here in header
+          schema:
+            type: string
+          required: true
+      summary: Create Subject
+      description: to Create Subject
+      operationId: create-subject
+      requestBody:
+        description: Create Subject
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateSubjectBody"
+        required: true
+      responses:
+        "201":
+          description: Subject created.
+          headers:
+            Location:
+              description: The URL of the created subject.
+              schema:
+                type: string
+                format: uri
+                example: /subjects/123
+        "500":
+          description: Failed to create a Subject.
+    get:
+      parameters:
+        - in: path
+          name: token
+          schema:
+            type: string
+          required: true
+          description: Subject Token
+        - in: header
+          name: tenant
+          description: pass tenant id here in header
+          schema:
+            type: string
+          required: true
+      summary: Get Subject Kyc Status
+      description: to get subject kyc status
+      operationId: get-subject-kyc
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  kyc_status:
+                    type: string
+                    enum:
+                      - "Passed"
+                      - "Processing"
+                      - "Failed"
+                      - "Upload a passport."
+        "500":
+          description: If something went wrong
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Something went wrong!!"
+
+  /subjects/{token}/passports:
+    post:
+      summary: Upload Passport
+      parameters:
+        - in: path
+          name: token
+          schema:
+            type: string
+          required: true
+          description: Subject Token
+        - in: header
+          name: tenant
+          description: pass tenant id here in header
+          schema:
+            type: string
+          required: true
+      description: to upload subject passport
+      operationId: token-passports
+      requestBody:
+        required: true
+        content:
+          image/jpeg:
+            schema:
+              type: string
+              format: binary
+          image/png:
+            schema:
+              type: string
+              format: binary
+          application/pdf:
+            schema:
+              type: string
+              format: binary
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FileUploadWith200"
+        "400":
+          description: In case of File not attached or tenant not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FileUploadWith400"
+        "413":
+          description: When you upload other files than png, jpg, jpeg
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FileUploadWith413"
+        "415":
+          description: File size is more than 5MB
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FileUploadWith415"
+        "500":
+          description: "Error: Internal Server Error"
+  /transactions/{transactionId}/receipts:
+    post:
+      summary: Upload receipts
+      parameters:
+        - in: path
+          name: transactionId
+          schema:
+            type: string
+          required: true
+          description: transactionId in path
+        - in: header
+          name: subject-token
+          schema:
+            type: string
+          required: true
+          description: subject-token in header
+        - in: header
+          name: tenant
+          description: pass tenant id here in header
+          schema:
+            type: string
+          required: true
+      description: to upload subject receipt
+      operationId: token-receipts
+      requestBody:
+        required: true
+        content:
+          image/jpeg:
+            schema:
+              type: string
+              format: binary
+          image/png:
+            schema:
+              type: string
+              format: binary
+          application/pdf:
+            schema:
+              type: string
+              format: binary
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FileUploadWith200"
+        "400":
+          description: In case of File not attached or tenant not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FileUploadWith400"
+        "413":
+          description: When you upload other files than png, jpg, jpeg
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FileUploadWith413"
+        "415":
+          description: File size is more than 5MB
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FileUploadWith415"
+        "500":
+          description: "Error: Internal Server Error"
+
+  /trip/{tripId}/ticket:
+    post:
+      parameters:
+        - in: path
+          name: tripId
+          description: to pass trip id
+          schema:
+            type: string
+          required: true
+        - in: header
+          name: subject-token
+          schema:
+            type: string
+          required: true
+          description: subject-token in header
+        - in: header
+          name: tenant
+          description: pass tenant id here in header
+          schema:
+            type: string
+          required: true
+      summary: To upload tickets
+      description: To upload tickets
+      operationId: create-trip-ticket
+      requestBody:
+        description: Create Trip Ticket Parameters
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - file
+                - reference_number
+                - destination
+              properties:
+                file:
+                  type: string
+                  format: binary
+                reference_number:
+                  type: string
+                  example: "123456789"
+                destination:
+                  type: string
+                  example: "London"
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: File uploaded successfully with all details!!
+        "500":
+          description: In case of didn't pass required parameters
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: '"[file|reference_number|destination]" is required'
+
+  /trips/document:
+    post:
+      parameters:
+        - in: header
+          name: subject-token
+          description: to pass subject token
+          schema:
+            type: string
+          required: true
+        - in: header
+          name: tenant
+          description: pass tenant id here in header
+          schema:
+            type: string
+          required: true
+      summary: To upload trip document without tripId
+      description: To upload trip document without tripId
+      operationId: trip-document
+      requestBody:
+        description: Create Trip Document Parameters
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - files
+                - reference_number
+                - destination
+              properties:
+                file:
+                  type: string
+                  format: binary
+                reference_number:
+                  type: string
+                  example: "123456789"
+                destination:
+                  type: string
+                  example: "London"
+      responses:
+        "201":
+          description: Trip document uploaded successfully along with create trip
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  trip_id:
+                    type: string
+                    example: "tripId"
+                  reference_number:
+                    type: string
+                    example: "reference_number"
+                  destination:
+                    type: string
+                    example: "destination"
+                  document_id:
+                    type: string
+                    example: "document_id"
+        "400":
+          description: In case of didn't pass required parameters
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: '"[file|reference_number|destination]" is required'
+
+  /trips:
+    post:
+      parameters:
+        - in: header
+          name: subject-token
+          description: to pass subject token
+          schema:
+            type: string
+          required: true
+        - in: header
+          name: tenant
+          description: pass tenant id here in header
+          schema:
+            type: string
+          required: true
+      summary: To create trip
+      description: to create trip
+      operationId: create-trip
+      requestBody:
+        description: Create Trip Parameters
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateTripBody"
+        required: true
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  trip_id:
+                    type: string
+                    example: cuid of trip ( UUID )
+        "500":
+          description: In case of didn't pass required parameters
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: '"field" is required'
+    get:
+      parameters:
+        - in: header
+          name: subject-token
+          description: to pass subject token
+          schema:
+            type: string
+          required: true
+        - in: header
+          name: tenant
+          description: pass tenant id here in header
+          schema:
+            type: string
+          required: true
+        - in: query
+          name: archived
+          description: archived as query string
+          schema:
+            type: string
+            enum:
+              - "true"
+              - "false"
+          required: false
+      summary: To get all recent trips
+      description: To get all recent trips
+      operationId: transaction-trips
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TripsResponse"
+        "500":
+          description: In case failure
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Something went wrong! | Error From Server"
+
+  /trips/{id}:
+    get:
+      parameters:
+        - in: path
+          name: id
+          description: trip ID
+          schema:
+            type: string
+          required: true
+        - in: header
+          name: subject-token
+          description: subject token in header
+          schema:
+            type: string
+          required: true
+        - in: header
+          name: tenant
+          description: pass tenant id here in header
+          schema:
+            type: string
+          required: true
+      summary: Trip details
+      operationId: trip-details
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TripDetailResponse"
+        "400":
+          description: In case subject token not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Subject token not found"
+        "500":
+          description: In case failure
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Something went wrong!"
+
+  /transactions:
+    get:
+      parameters:
+        - in: header
+          name: subject-token
+          description: to pass subject token
+          schema:
+            type: string
+          required: true
+        - in: header
+          name: tenant
+          description: pass tenant id here in header
+          schema:
+            type: string
+          required: true
+      summary: To get all recent transactions of subject ( last 6 months )
+      operationId: transactions-recent
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RecentTransactionResponse"
+        "500":
+          description: In case failure
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Something went wrong!"
+  /transactions/{transactionId}/items:
+    get:
+      parameters:
+        - in: path
+          name: transactionId
+          description: transaction id
+          schema:
+            type: string
+          required: true
+        - in: header
+          name: subject-token
+          description: to pass subject token
+          schema:
+            type: string
+          required: true
+        - in: header
+          name: tenant
+          description: pass tenant id here in header
+          schema:
+            type: string
+          required: true
+      summary: To get transaction items
+      operationId: transactions-get-items
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TransactionItemsResponse"
+        "500":
+          description: In case failure
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Something went wrong!"
+  /transactions/{transactionId}:
+    get:
+      parameters:
+        - in: path
+          name: transactionId
+          description: pass the transaction id
+          schema:
+            type: string
+          required: true
+        - in: header
+          name: subject-token
+          description: subject token in header
+          schema:
+            type: string
+          required: true
+        - in: header
+          name: tenant
+          description: pass tenant id here in header
+          schema:
+            type: string
+          required: true
+      summary: To the detail of transaction
+      operationId: transaction-detail
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TransactionDetailResponse"
+        "400":
+          description: In case transaction not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Transaction not found"
+        "500":
+          description: In case failure
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Something went wrong!"
+  /transactions/{transactionId}/receipt:
+    get:
+      parameters:
+        - in: path
+          name: transactionId
+          description: pass the transaction id
+          schema:
+            type: string
+          required: true
+        - in: header
+          name: subject-token
+          description: subject token in header
+          schema:
+            type: string
+          required: true
+        - in: header
+          name: tenant
+          description: pass tenant id here in header
+          schema:
+            type: string
+          required: true
+      summary: To get the transaction receipt
+      operationId: transaction-get-receipt
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+
+        "400":
+          description: In case transaction not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Transaction not found."
+        "500":
+          description: In case failure
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Something went wrong!"
+  /transactions/{transactionId}/barcode:
+    get:
+      parameters:
+        - in: path
+          name: transactionId
+          description: pass the transaction id
+          schema:
+            type: string
+          required: true
+        - in: header
+          name: subject-token
+          description: subject token in header
+          schema:
+            type: string
+          required: true
+        - in: header
+          name: tenant
+          description: pass tenant id here in header
+          schema:
+            type: string
+          required: true
+      summary: To get the transaction barcode
+      operationId: transaction-get-barcode
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            image/png:
+              schema:
+                type: string
+                format: binary
+        "400":
+          description: In case transaction not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Transaction not found."
+        "500":
+          description: In case failure
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Something went wrong!"
+  /trips/{tripId}/barcode:
+    get:
+      parameters:
+        - in: path
+          name: tripId
+          description: pass the trip id
+          schema:
+            type: string
+          required: true
+        - in: header
+          name: subject-token
+          description: subject token in header
+          schema:
+            type: string
+          required: true
+        - in: header
+          name: tenant
+          description: pass tenant id here in header
+          schema:
+            type: string
+          required: true
+      summary: To get the trip barcode
+      operationId: trip-get-barcode
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            image/png:
+              schema:
+                type: string
+                format: binary
+        "400":
+          description: In case transaction not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Trip not found."
+        "500":
+          description: In case failure
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Something went wrong!"
+  /trips/{tripId}/document:
+    get:
+      parameters:
+        - in: path
+          name: tripId
+          description: pass the trip id
+          schema:
+            type: string
+          required: true
+        - in: header
+          name: subject-token
+          description: subject token in header
+          schema:
+            type: string
+          required: true
+        - in: header
+          name: tenant
+          description: pass tenant id here in header
+          schema:
+            type: string
+          required: true
+      summary: To get the trip ticket (pdf, jpg, png)
+      operationId: trip-get-ticket
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            image/png:
+              schema:
+                type: string
+                format: binary
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+            image/jpeg:
+              schema:
+                type: string
+                format: binary
+        "400":
+          description: In case transaction not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Trip not found."
+        "500":
+          description: In case failure
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Something went wrong!"
+
+  /ports/{countryCode}/{type}:
+    get:
+      parameters:
+        - in: path
+          name: countryCode
+          description: pass the country code
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: type
+          description: pass the type of port
+          schema:
+            type: string
+          required: true
+      summary: To get the port lis
+      operationId: ports-list
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PortListResponse"
+        "500":
+          description: In case failure
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Something went wrong!"
+
+  /transactions/{transactionId}/archive:
+    patch:
+      parameters:
+        - in: path
+          name: transactionId
+          description: pass the transaction id
+          schema:
+            type: string
+          required: true
+        - in: header
+          name: subject-token
+          description: subject token in header
+          schema:
+            type: string
+          required: true
+        - in: header
+          name: tenant
+          description: pass tenant id here in header
+          schema:
+            type: string
+          required: true
+      summary: to archive the transactions
+      operationId: transaction-archive
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Transaction successfully Archived/Unarchived."
+
+        "400":
+          description: In case transaction not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Transaction not found."
+        "500":
+          description: In case failure
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Something went wrong!"
+
+  /trips/{tripId}/archive:
+    patch:
+      parameters:
+        - in: path
+          name: tripId
+          description: pass the trip id
+          schema:
+            type: string
+          required: true
+        - in: header
+          name: subject-token
+          description: subject token in header
+          schema:
+            type: string
+          required: true
+        - in: header
+          name: tenant
+          description: pass tenant id here in header
+          schema:
+            type: string
+          required: true
+      summary: to archive the trips
+      operationId: trip-archive
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Trip successfully Archived/Unarchived."
+
+        "400":
+          description: In case trip not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Trip not found."
+        "500":
+          description: In case failure
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Something went wrong!"
+components:
+  schemas:
+    CreateSubjectBody:
+      required:
+        - token
+        - first_name
+        - last_name
+        - address
+        - citizenship
+        - dob
+      type: object
+      properties:
+        token:
+          type: string
+          description: Pass the Subject Token
+          example: Subject Token
+          pattern: /^[a-zA-Z\s\p{L}\p{Mn}]*$/
+        first_name:
+          type: string
+          example: John
+          pattern: /^[a-zA-Z\s\p{L}\p{Mn}]*$/
+        last_name:
+          type: string
+          example: Doe
+          pattern: /^[a-zA-Z\s\p{L}\p{Mn}]*$/
+        address:
+          required:
+            - line_1
+            - city
+            - region
+            - postcode
+            - country
+          type: object
+          properties:
+            line_1:
+              type: string
+              example: Address Line 1
+            line_2:
+              type: string
+              example: Address Line 2
+            line_3:
+              type: string
+              example: Address Line 3
+            city:
+              type: string
+              example: City
+            region:
+              type: string
+              example: Region
+            postcode:
+              type: string
+              example: PostCode
+            country:
+              type: string
+              pattern: /^[A-Z]{3}$/
+              example: USA ( Any 3 letter country code )
+        citizenship:
+          type: string
+          pattern: /^[A-Z]{3}$/
+          example: FRA ( Any 3 letter country code and should be EU country only)
+        dob:
+          type: string
+          example: Available Date Format ['DD/MM/YYYY', 'DD MMM YYYY']
+    FileUploadWith200:
+      type: object
+      properties:
+        message:
+          type: string
+          example: File uploaded successfully
+    FileUploadWith400:
+      type: object
+      properties:
+        message:
+          type: string
+          example: File not found - Please attach file
+    FileUploadWith413:
+      type: object
+      properties:
+        message:
+          type: string
+          example: Invalid file
+    FileUploadWith415:
+      type: object
+      properties:
+        message:
+          type: string
+          example: File size too large - 5MB max supported
+    CreateTripBody:
+      type: object
+      required:
+        - start_date
+        - end_date
+        - mode_of_travel
+        - departure_terminal
+        - country_destination
+      properties:
+        trip_name:
+          type: string
+          example: "trip name"
+          description: Optional
+        start_date:
+          type: string
+          example: "01/01/2021"
+          description: Available Date Format ['DD/MM/YYYY', 'DD MMM YYYY']
+        end_date:
+          type: string
+          example: "01/01/2021"
+          description: Available Date Format ['DD/MM/YYYY', 'DD MMM YYYY']
+        mode_of_travel:
+          type: string
+          example: "Flight"
+        departure_terminal:
+          type: string
+          example: "London"
+        country:
+          type: string
+          example: "country"
+          description: "Optional"
+        country_entry:
+          type: string
+          example: "ISO 3 character"
+          description: "Optional | one these FRA,ITA,PRT,NLD,BEL,ESP"
+        country_exit:
+          type: string
+          example: "ISO 3 character"
+          description: "Optional | one these FRA,ITA,PRT,NLD,BEL,ESP"
+        country_destination:
+          type: string
+          example: "ISO 3 character"
+          description: "one these FRA,ITA,PRT,NLD,BEL,ESP"
+        departure_dt:
+          type: string
+          example: "2021-01-01T00:00:00.000Z"
+          description: "Optional | ISO 8601 format"
+        vessel_number:
+          type: string
+          example: "vessel number"
+          description: "Optional"
+        approximate_time:
+          type: string
+          example: "10:00 - 11:00"
+          description: "Optional"
+        document_id:
+          type: string
+          example: "document id"
+          description: "Optional"
+
+    TripsResponse:
+      type: object
+      properties:
+        trips:
+          type: array
+          items:
+            properties:
+              trip_id:
+                type: string
+                example: cuid of trip ( UUID )
+              trip_name:
+                type: string
+                example: "trip name | country - <start date month> <start date year>"
+              start_date:
+                type: string
+                example: "2021-01-01T00:00:00.000Z"
+                description: in ISO format
+              end_date:
+                type: string
+                example: "2021-01-01T00:00:00.000Z"
+                description: in ISO format
+              country:
+                type: string
+                example: "FRA"
+              trip_status:
+                type: string
+                example: "Completed/InProgress"
+              archived:
+                type: boolean
+                example: "true/false"
+              is_boarding_pass_uploaded:
+                type: boolean
+                example: "true/false"
+              vat_reclaim_status:
+                type: string
+                enum:
+                  - "Processing"
+                  - "Refund Approved"
+                  - "Refund Failed"
+
+    RecentTransactionResponse:
+      type: object
+      properties:
+        recent_transaction:
+          type: array
+          items:
+            properties:
+              total_amount:
+                type: number
+                example: 100
+              merchant_name:
+                type: string
+                example: "vender name"
+              transaction_id:
+                type: string
+                example: "transaction id"
+              transaction_category:
+                type: string
+                example: "transaction category"
+              archived:
+                type: boolean
+                example: "false"
+              currency:
+                type: string
+                example: "EUR"
+
+    TransactionDetailResponse:
+      type: object
+      properties:
+        transaction:
+          type: object
+          properties:
+            total_amount:
+              type: number
+              example: 100
+            merchant_name:
+              type: string
+              example: "vender name"
+            transaction_id:
+              type: string
+              example: "transaction id"
+            transaction_category:
+              type: string
+              example: "category name"
+            receipt:
+              type: object
+              properties:
+                status:
+                  type: string
+                  enum:
+                    - "Accepted"
+                    - "Processing"
+                    - "Failed"
+                    - "Improper receipt"
+                    - "Under review"
+                    - "Irrelevant receipt"
+                error:
+                  type: string
+                  enum:
+                    - "Receipt item not found."
+                    - "Total amount is 0."
+                    - "Duplicate receipt."
+                    - "Handwritten field found."
+                    - "Item total is 0."
+                    - "Receipt line item and receipt total mismatch."
+                    - "Transaction amount and receipt amount mismatch."
+            currency:
+              type: string
+              example: "EUR"
+            archived:
+              type: boolean
+              example: "true"
+            account_number:
+              type: string
+              example: "AccountNumber | Account number not found."
+            transaction_date:
+              type: string
+              example: "2021-01-01T00:00:00.000Z"
+              description: in ISO format
+            total_vat_amount:
+              type: number
+              example: 100.00
+
+    TripDetailResponse:
+      type: object
+      properties:
+        total_reclaim:
+          type: number
+          example: 100
+        barcode_status:
+          type: string
+          example: "ISSUED/NOT_ISSUED"
+        approximate_time:
+          type: string
+          example: "10:00 - 11:00"
+        trip_start_date:
+          type: string
+          example: "DATE in ISO yyyy-MM-dd'T'HH:mm:ss.SSSXXX"
+        trip_end_date:
+          type: string
+          example: "DATE in ISO yyyy-MM-dd'T'HH:mm:ss.SSSXXX"
+        archived:
+          type: boolean
+          example: "true/false"
+        is_boarding_pass_uploaded:
+          type: boolean
+          example: "true/false"
+        country_entry:
+          type: string
+          example: "ISO 3 character"
+        country_exit:
+          type: string
+          example: "ISO 3 character"
+        departure_terminal:
+          type: string
+          example: "London"
+        country_destination:
+          type: string
+          example: "ISO 3 character"
+        mode_of_travel:
+          type: string
+          example: "Flight"
+        reference_number:
+          type: string
+          example: "123456789"
+        destination:
+          type: string
+          example: "London"
+        vat_reclaim_status:
+          type: string
+          enum:
+            - "Processing"
+            - "Refund Approved"
+            - "Refund Failed"
+        transactions:
+          type: array
+          items:
+            properties:
+              country:
+                type: string
+                example: "In 3 ISO Character"
+              merchant_name:
+                type: string
+                example: "Merchant name"
+              transaction_category:
+                type: string
+                example: "transaction category"
+              total_amount:
+                type: number
+                example: "100"
+              transaction_date:
+                type: string
+                example: "In 3 ISO Character"
+              total_vat_amount:
+                type: string
+                example: "vat amount of transaction/reclaimable amount"
+              receipt_status:
+                type: string
+                example: "Accepted"
+                description: "Accepted"
+              archived:
+                type: boolean
+                example: "true/false"
+                description: "transaction archived status"
+              transaction_id:
+                type: string
+                example: "transaction-id"
+                description: "transaction id"
+              currency:
+                type: string
+                example: "EUR"
+                description: "currency of transaction"
+
+    TransactionItemsResponse:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            properties:
+              item_description:
+                type: string
+                example: "apple laptop"
+              category:
+                type: string
+                example: "electronic"
+              eligible:
+                type: boolean
+                example: "true"
+              quantity:
+                type: number
+                example: "2"
+              discount:
+                type: number
+                example: "20"
+              vat_amount:
+                type: number
+                example: "200"
+              vat_rate:
+                type: number
+                example: "20"
+              price:
+                type: number
+                example: "1800"
+              total:
+                type: number
+                example: "2000"
+              currency:
+                type: string
+                example: "EUR"
+                description: "currency of transaction"
+
+    PortListResponse:
+      type: object
+      properties:
+        <country>:
+          type: object
+          properties:
+            <type>:
+              type: array
+              items:
+                properties:
+                  name:
+                    type: string
+                    example: "Charles de Gaulle Airport"
+                  code:
+                    type: string
+                    example: "CDG"
